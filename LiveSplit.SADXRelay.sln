@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveSplit.SADXRelayClient", "LiveSplit.SADXRelayClient\LiveSplit.SADXRelayClient.csproj", "{05A925B1-DACB-4A2C-B43C-1387A876CEA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveSplit.SADXRelayServer", "LiveSplit.SADXRelayServer\LiveSplit.SADXRelayServer.csproj", "{74790671-1C68-4B16-9CB6-022EA24377BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveSplit.SADXRelayPacketLib", "LiveSplit.SADXRelayPacketLib\LiveSplit.SADXRelayPacketLib.csproj", "{1D45A880-A250-4978-BA20-F3AAAF86D1E7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveSplit.SADXRelayReceiver", "LiveSplit.SADXRelayReceiver\LiveSplit.SADXRelayReceiver.csproj", "{CBF3B65B-5C85-4668-95A6-1DC52DB55012}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05A925B1-DACB-4A2C-B43C-1387A876CEA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05A925B1-DACB-4A2C-B43C-1387A876CEA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05A925B1-DACB-4A2C-B43C-1387A876CEA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05A925B1-DACB-4A2C-B43C-1387A876CEA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74790671-1C68-4B16-9CB6-022EA24377BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74790671-1C68-4B16-9CB6-022EA24377BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74790671-1C68-4B16-9CB6-022EA24377BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74790671-1C68-4B16-9CB6-022EA24377BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D45A880-A250-4978-BA20-F3AAAF86D1E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D45A880-A250-4978-BA20-F3AAAF86D1E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D45A880-A250-4978-BA20-F3AAAF86D1E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D45A880-A250-4978-BA20-F3AAAF86D1E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBF3B65B-5C85-4668-95A6-1DC52DB55012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBF3B65B-5C85-4668-95A6-1DC52DB55012}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBF3B65B-5C85-4668-95A6-1DC52DB55012}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBF3B65B-5C85-4668-95A6-1DC52DB55012}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
