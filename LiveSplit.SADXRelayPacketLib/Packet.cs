@@ -23,8 +23,6 @@ namespace LiveSplit.SADXRelayPacketLib
         public string Id { get; }
         public ResponseCode Response { get; }
 
-        private const byte NewLineByte = 12; 
-        
         /// <summary>
         /// Create a Packet of type NewConnection
         /// </summary>
@@ -75,32 +73,29 @@ namespace LiveSplit.SADXRelayPacketLib
             byte[] buffer;
             if (Type == PacketType.NewConnection)
             {
-                buffer = new byte[6];
+                buffer = new byte[5];
                 buffer[0] = (byte)Type;
                 Encoding.ASCII.GetBytes(Id).CopyTo(buffer, 1);
-                buffer[5] = NewLineByte;
                 return buffer;
             }
 
             if (Type == PacketType.CurrentTime)
             {
-                buffer = new byte[10];
+                buffer = new byte[9];
                 buffer[0] = (byte)Type;
                 BitConverter.GetBytes(Time.TotalMilliseconds).CopyTo(buffer, 1);
-                buffer[9] = NewLineByte;
                 return buffer;
             }
 
             if (Type == PacketType.Response)
             {
-                buffer = new byte[3];
+                buffer = new byte[2];
                 buffer[0] = (byte)Type;
                 buffer[1] = (byte)Response;
-                buffer[2] = NewLineByte;
                 return buffer;
             }
 
-            return new byte[] { (byte)Type, NewLineByte };
+            return new byte[] { (byte)Type };
         }
 
         /// <summary>
@@ -130,6 +125,17 @@ namespace LiveSplit.SADXRelayPacketLib
             }
 
             return new Packet();
+        }
+
+        public override string ToString()
+        {
+            if (Type == PacketType.NewConnection)
+                return $"Type: {Type.ToString()}, Id: {Id}";
+            if (Type == PacketType.CurrentTime)
+                return $"Type: {Type.ToString()}, Time: {Time}";
+            if (Type == PacketType.Response)
+                return $"Type: {Type.ToString()}, Response: {Response.ToString()}";
+            return $"Type: {Type.ToString()}";
         }
     }
 }
