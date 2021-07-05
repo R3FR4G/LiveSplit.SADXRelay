@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveSplit.SADXRelayPacketLi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveSplit.SADXRelayReceiver", "LiveSplit.SADXRelayReceiver\LiveSplit.SADXRelayReceiver.csproj", "{CBF3B65B-5C85-4668-95A6-1DC52DB55012}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveSplit.SADXRelayPacketLib.Tests", "LiveSplit.SADXRelayPacketLib.Tests\LiveSplit.SADXRelayPacketLib.Tests.csproj", "{87B90CDA-19D9-41F9-AB3A-4F5B96267E40}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{CBF3B65B-5C85-4668-95A6-1DC52DB55012}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBF3B65B-5C85-4668-95A6-1DC52DB55012}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBF3B65B-5C85-4668-95A6-1DC52DB55012}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87B90CDA-19D9-41F9-AB3A-4F5B96267E40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87B90CDA-19D9-41F9-AB3A-4F5B96267E40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87B90CDA-19D9-41F9-AB3A-4F5B96267E40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87B90CDA-19D9-41F9-AB3A-4F5B96267E40}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
