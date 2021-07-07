@@ -1,19 +1,13 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml;
-using System.Linq;
 using System.Net.Sockets;
-using System.Reflection;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Forms;
 using LiveSplit.Model;
 using LiveSplit.UI;
 using LiveSplit.UI.Components;
-using System.Windows.Forms;
 using LiveSplit.Options;
 using LiveSplit.SADXRelayPacketLib;
 using Timer = System.Timers.Timer;
@@ -46,12 +40,12 @@ namespace LiveSplit.SADXRelayClient
         {
             int timeout = 2000;
             
-            byte[] idPacketBytes = new Packet(id).ToBytes();
+            Packet idPacket = new Packet(id);
             Task<int> sendTask;
 
             try
             {
-                sendTask = ServerClient.SendAsync(idPacketBytes, idPacketBytes.Length);
+                sendTask = ServerClient.SendAsync(idPacket);
                 sendTask.Wait(timeout);
             }
             catch
@@ -65,7 +59,7 @@ namespace LiveSplit.SADXRelayClient
                 confirmationTask = ServerClient.ReceiveAsync();
                 confirmationTask.Wait(timeout);
             }
-            catch (Exception e)
+            catch
             {
                 return ResponseCode.Error;
             }
@@ -78,7 +72,6 @@ namespace LiveSplit.SADXRelayClient
             Debug.Assert(confirmation.Type == PacketType.Response);
 
             return confirmation.Response;
-            
         }
         
         private void Update(object sender, ElapsedEventArgs e)

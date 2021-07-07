@@ -1,5 +1,3 @@
-using System;
-
 namespace LiveSplit.SADXRelayPacketLib
 {
     public enum RelayTeam : byte

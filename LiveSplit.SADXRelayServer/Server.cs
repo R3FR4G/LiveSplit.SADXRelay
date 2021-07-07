@@ -44,13 +44,11 @@ namespace LiveSplit.SADXRelayServer
                         if (player != null)
                         {
                             player.IsAuthenticated = true;
-                            byte[] responseBytes = new Packet(ResponseCode.Ok).ToBytes();
-                            await udpClient.SendAsync(responseBytes, responseBytes.Length, receivedResults.RemoteEndPoint);
+                            await udpClient.SendAsync(new Packet(ResponseCode.Ok), receivedResults.RemoteEndPoint);
                         }
                         else
                         {
-                            byte[] responseBytes = new Packet(ResponseCode.BadId).ToBytes();
-                            await udpClient.SendAsync(responseBytes, responseBytes.Length, receivedResults.RemoteEndPoint);
+                            await udpClient.SendAsync(new Packet(ResponseCode.BadId), receivedResults.RemoteEndPoint);
                         }
                     }
                 }
