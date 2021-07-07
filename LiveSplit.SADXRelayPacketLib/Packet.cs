@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace LiveSplit.SADXRelayPacketLib
 {
@@ -136,6 +139,21 @@ namespace LiveSplit.SADXRelayPacketLib
             if (Type == PacketType.Response)
                 return $"Type: {Type.ToString()}, Response: {Response.ToString()}";
             return $"Type: {Type.ToString()}";
+        }
+    }
+
+    public static class UdpClientExtensions
+    {
+        public static async Task<int> SendAsync(this UdpClient client, Packet packet)
+        {
+            byte[] bytesToSend = packet.ToBytes();
+            return await client.SendAsync(bytesToSend, bytesToSend.Length);
+        }
+
+        public static async Task<int> SendAsync(this UdpClient client, Packet packet, IPEndPoint endPoint)
+        {
+            byte[] bytesToSend = packet.ToBytes();
+            return await client.SendAsync(bytesToSend, bytesToSend.Length, endPoint);
         }
     }
 }
