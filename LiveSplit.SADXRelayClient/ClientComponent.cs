@@ -28,6 +28,8 @@ namespace LiveSplit.SADXRelayClient
         public static UdpClient ServerClient = new UdpClient("localhost", 3456);
 
         public static bool IsAuthenticated = false;
+
+        public static LiveSplitState LSState;
         
         public override string ComponentName => ClientFactory.Name;
         public ClientComponent(LiveSplitState state)
@@ -78,7 +80,24 @@ namespace LiveSplit.SADXRelayClient
         {
             if (IsAuthenticated)
             {
+                int timeout = 2000;
+
+                if (LSState.CurrentPhase != TimerPhase.Running)
+                    return;
+                if (LSState.CurrentPhase == TimerPhase.Ended)
+                    IsAuthenticated = false;
+                Packet timePacket = new Packet(LSState.CurrentTime.GameTime.Value);
                 
+                Task<int> sendTask;
+                try
+                {
+                    sendTask = ServerClient.SendAsync(timePacket);
+                    sendTask.Wait(timeout);
+                }
+                catch
+                {
+                    MessageBox.Show("error");
+                }
             }
         }
 
@@ -101,7 +120,11 @@ namespace LiveSplit.SADXRelayClient
         {
             
         }
-        
-        public override void Update(IInvalidator invalidator, LiveSplitState state, float width, float height, LayoutMode mode) { }
+
+        public override void Update(IInvalidator invalidator, LiveSplitState state, float width, float height,
+            LayoutMode mode)
+        {
+            LSState = state;
+        }
     }
 }
