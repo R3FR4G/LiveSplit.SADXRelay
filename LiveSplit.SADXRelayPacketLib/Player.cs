@@ -1,3 +1,5 @@
+using System.Net;
+
 namespace LiveSplit.SADXRelayPacketLib
 {
     public enum RelayTeam : byte
@@ -8,6 +10,7 @@ namespace LiveSplit.SADXRelayPacketLib
     
     public class Player
     {
+        public IPEndPoint PlayerConnection { get; set; } = null;
         public bool IsAuthenticated { get; set; } = false;
         public string Id { get; }
         public string Name { get; }
