@@ -13,9 +13,12 @@ using LiveSplit.SADXRelayPacketLib;
 
 namespace LiveSplit.SADXRelayServer
 {
-    class Program
+    class Server
     {
         public static List<Player> Players = JsonSerializer.Deserialize<List<Player>>(File.ReadAllText("players.json"));
+
+        public static IPEndPoint receiver;
+        
         static void Main(string[] args)
         {
             foreach (Player player in Players)
@@ -43,8 +46,12 @@ namespace LiveSplit.SADXRelayServer
                         Player player = Players.FirstOrDefault(p => p.Id == sent.Id);
                         if (player != null)
                         {
+                            if (player.Name == "Host")
+                                receiver = receivedResults.RemoteEndPoint;
+                            
                             player.IsAuthenticated = true;
                             player.PlayerConnection = receivedResults.RemoteEndPoint;
+
                             await udpClient.SendAsync(new Packet(ResponseCode.Ok), receivedResults.RemoteEndPoint);
                         }
                         else
@@ -54,7 +61,7 @@ namespace LiveSplit.SADXRelayServer
                     }
                     if (sent.Type == PacketType.CurrentTime)
                     {
-                        bool found = false;
+                        Player sender = null;
                         foreach (Player player in Players)
                         {
                             if(player.PlayerConnection == null)
@@ -63,16 +70,15 @@ namespace LiveSplit.SADXRelayServer
                             if (player.PlayerConnection.Address.ToString() ==
                                 receivedResults.RemoteEndPoint.Address.ToString())
                             {
-                                found = true;
+                                sender = player;
                                 break;
                             }
-                                
                         }
-                        
-                        if(found)
-                            Console.WriteLine("allowed connection");
-                        else
-                            Console.WriteLine("not allowed");
+
+                        if (sender == null || receiver == null)
+                            continue;
+
+                        await udpClient.SendAsync(new Packet(sender.Story, sender.Team, sent.Time), receiver);
                     }
                 }
             }
