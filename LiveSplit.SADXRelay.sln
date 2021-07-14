@@ -6,9 +6,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveSplit.SADXRelayServer",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveSplit.SADXRelayPacketLib", "LiveSplit.SADXRelayPacketLib\LiveSplit.SADXRelayPacketLib.csproj", "{1D45A880-A250-4978-BA20-F3AAAF86D1E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveSplit.SADXRelayReceiver", "LiveSplit.SADXRelayReceiver\LiveSplit.SADXRelayReceiver.csproj", "{CBF3B65B-5C85-4668-95A6-1DC52DB55012}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveSplit.SADXRelayPacketLib.Tests", "LiveSplit.SADXRelayPacketLib.Tests\LiveSplit.SADXRelayPacketLib.Tests.csproj", "{87B90CDA-19D9-41F9-AB3A-4F5B96267E40}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiveSplit.SADXRelayReceiver", "LiveSplit.SADXRelayReceiver\LiveSplit.SADXRelayReceiver.csproj", "{D094EC19-3622-4147-8F06-48369F8721B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,13 +28,13 @@ Global
 		{1D45A880-A250-4978-BA20-F3AAAF86D1E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D45A880-A250-4978-BA20-F3AAAF86D1E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D45A880-A250-4978-BA20-F3AAAF86D1E7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CBF3B65B-5C85-4668-95A6-1DC52DB55012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CBF3B65B-5C85-4668-95A6-1DC52DB55012}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CBF3B65B-5C85-4668-95A6-1DC52DB55012}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CBF3B65B-5C85-4668-95A6-1DC52DB55012}.Release|Any CPU.Build.0 = Release|Any CPU
 		{87B90CDA-19D9-41F9-AB3A-4F5B96267E40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{87B90CDA-19D9-41F9-AB3A-4F5B96267E40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87B90CDA-19D9-41F9-AB3A-4F5B96267E40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87B90CDA-19D9-41F9-AB3A-4F5B96267E40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D094EC19-3622-4147-8F06-48369F8721B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D094EC19-3622-4147-8F06-48369F8721B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D094EC19-3622-4147-8F06-48369F8721B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D094EC19-3622-4147-8F06-48369F8721B6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

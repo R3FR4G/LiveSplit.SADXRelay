@@ -1,12 +1,18 @@
 ﻿using System;
+using System.Windows.Forms;
 
 namespace LiveSplit.SADXRelayReceiver
 {
-    class Program
+    class Receiver
     {
-        static void Main(string[] args)
+        public static ReceiverForm receiverForm;
+        [STAThread]
+        public static void Main()
         {
-            //this is what the race host will be running, probably make a gui to display the times and such
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            receiverForm = new ReceiverForm();
+            Application.Run(receiverForm);
         }
     }
 }
