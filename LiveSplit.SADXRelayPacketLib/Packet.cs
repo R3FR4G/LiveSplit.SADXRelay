@@ -19,7 +19,9 @@ namespace LiveSplit.SADXRelayPacketLib
         Disconnect,
         Response,
         RunUpdate,
-        CurrentTimeToReceiver
+        
+        CurrentTimeToReceiver,
+        RunUpdateToReceiver
     }
     public class Packet
     {
@@ -28,8 +30,8 @@ namespace LiveSplit.SADXRelayPacketLib
         public string Id { get; }
         public ResponseCode Response { get; }
         
-        public byte PlayerIndex { get; }
-        public byte PlayerTeamIndex { get; }
+        public RelayStory PlayerIndex { get; }
+        public RelayTeam PlayerTeamIndex { get; }
 
         /// <summary>
         /// Create a Packet of type NewConnection
@@ -72,11 +74,16 @@ namespace LiveSplit.SADXRelayPacketLib
             Response = responseCode;
         }
 
-        public Packet(byte playerIndex, byte playerTeamIndex)
+        /// <summary>
+        /// Create a Packet of type CurrentTimeToReceiver
+        /// </summary>
+        /// <param name="responseCode"></param>
+        public Packet(RelayStory playerIndex, RelayTeam playerTeamIndex, TimeSpan time)
         {
             Type = PacketType.CurrentTimeToReceiver;
             PlayerIndex = playerIndex;
             PlayerTeamIndex = playerTeamIndex;
+            Time = time;
         }
         
         /// <summary>
@@ -112,10 +119,11 @@ namespace LiveSplit.SADXRelayPacketLib
                 //case PacketType.RunUpdate:
                 case PacketType.CurrentTimeToReceiver:
                 {
-                    buffer = new byte[3];
+                    buffer = new byte[11];
                     buffer[0] = (byte)Type;
-                    buffer[1] = PlayerIndex;
-                    buffer[2] = PlayerTeamIndex;
+                    buffer[1] = (byte)PlayerIndex;
+                    buffer[2] = (byte)PlayerTeamIndex;
+                    BitConverter.GetBytes(Time.TotalMilliseconds).CopyTo(buffer, 3);
                     return buffer;
                 }
                 default:
@@ -152,10 +160,12 @@ namespace LiveSplit.SADXRelayPacketLib
                 //case PacketType.RunUpdate:
                 case PacketType.CurrentTimeToReceiver:
                 {
-                    byte playerIndex = bytes[1];
-                    byte playerTeamIndex = bytes[2];
-                    return new Packet(playerIndex, playerTeamIndex);
+                    RelayStory playerIndex = (RelayStory)bytes[1];
+                    RelayTeam playerTeamIndex = (RelayTeam)bytes[2];
+                    TimeSpan time = TimeSpan.FromMilliseconds(BitConverter.ToDouble(bytes, 3));
+                    return new Packet(playerIndex, playerTeamIndex, time);
                 }
+                //case PacketType.RunUpdateToReceiver
                 default:
                     return new Packet();
             }
@@ -173,7 +183,8 @@ namespace LiveSplit.SADXRelayPacketLib
                     return $"Type: {Type.ToString()}, Response: {Response.ToString()}";
                 //case PacketType.RunUpdate:
                 case PacketType.CurrentTimeToReceiver:
-                    return $"Type: {Type.ToString()}, PIndex: {PlayerIndex}, PTeamIndex: {PlayerTeamIndex}";
+                    return $"Type: {Type.ToString()}, PIndex: {PlayerIndex}, PTeamIndex: {PlayerTeamIndex}, Time: {Time}";
+                //case PacketType.RunUpdateToReceiver:
                 default:
                     return $"Type: {Type.ToString()}";
             }
