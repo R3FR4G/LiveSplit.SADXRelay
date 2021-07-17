@@ -14,7 +14,7 @@ namespace LiveSplit.SADXRelayReceiver
         
         public static BackgroundWorker backWorker = new BackgroundWorker();
 
-        public static UdpClient udpClient = new UdpClient("localhost", 3456);
+        public static UdpClient udpClient = new UdpClient("roborecords.org", 3456);
         public static void DoWork()
         {
             int timeout = 2000;

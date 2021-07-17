@@ -25,7 +25,7 @@ namespace LiveSplit.SADXRelayClient
         
         public ClientSettings settingsControl = new ClientSettings();
 
-        public static UdpClient ServerClient = new UdpClient("localhost", 3456);
+        public static UdpClient ServerClient = new UdpClient("roborecords.org", 3456);
 
         public static bool IsAuthenticated = false;
 
