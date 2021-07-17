@@ -61,27 +61,44 @@ namespace LiveSplit.SADXRelayServer
                     }
                     if (sent.Type == PacketType.CurrentTime)
                     {
-                        Player sender = null;
-                        foreach (Player player in Players)
-                        {
-                            if(player.PlayerConnection == null)
-                                continue;
-
-                            if (player.PlayerConnection.Address.ToString() ==
-                                receivedResults.RemoteEndPoint.Address.ToString())
-                            {
-                                sender = player;
-                                break;
-                            }
-                        }
+                        Player sender = CheckConnection(ref receivedResults);
 
                         if (sender == null || receiver == null)
                             continue;
 
                         await udpClient.SendAsync(new Packet(sender.Story, sender.Team, sent.Time), receiver);
                     }
+
+                    if (sent.Type == PacketType.RunUpdate)
+                    {
+                        Player sender = CheckConnection(ref receivedResults);
+
+                        if (sender == null || receiver == null)
+                            continue;
+
+                        await udpClient.SendAsync(new Packet(sender.Story, sender.Team), receiver);
+                    }
                 }
             }
+        }
+
+        static Player CheckConnection(ref UdpReceiveResult receivedResults)
+        {
+            Player sender = null;
+            foreach (Player player in Players)
+            {
+                if(player.PlayerConnection == null)
+                    continue;
+
+                if (player.PlayerConnection.Address.ToString() ==
+                    receivedResults.RemoteEndPoint.Address.ToString())
+                {
+                    sender = player;
+                    break;
+                }
+            }
+
+            return sender;
         }
     }
 }

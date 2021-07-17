@@ -17,9 +17,16 @@ namespace LiveSplit.SADXRelayReceiver
 
         private static (Color, int) leftOutline;
         private static (Color, int) rightOutline;
-
+        
         public static OutlineLabel EuTime;
         public static OutlineLabel NaTime;
+
+        public static OutlineLabel[] TimeLabels; 
+
+        public static RelayStory CurrentEuStory = RelayStory.Sonic;
+        public static RelayStory CurrentNaStory = RelayStory.Sonic;
+
+        public static RelayStory[] CurrentStories = new RelayStory[] {CurrentEuStory, CurrentNaStory};
 
         public ReceiverForm()
         {
@@ -62,6 +69,8 @@ namespace LiveSplit.SADXRelayReceiver
 
             grid.Panel1.Controls.Add(EuTime);
             grid.Panel2.Controls.Add(NaTime);
+
+            TimeLabels = new OutlineLabel[] {EuTime, NaTime};
             
             ContextMenu ctxMenu = new ContextMenu();
             ctxMenu.MenuItems.Add("Change BackColor", OnClickBackColor);
@@ -92,16 +101,14 @@ namespace LiveSplit.SADXRelayReceiver
             {
                 case PacketType.CurrentTimeToReceiver:
                 {
-                    if (packet.PlayerTeamIndex == 0)
-                    {
-                        EuTime.Text = packet.Time.ToString();
+                    if (packet.PlayerIndex != CurrentStories[(byte) packet.PlayerTeamIndex])
                         break;
-                    }
-                    NaTime.Text = packet.Time.ToString();
+                    TimeLabels[(byte)packet.PlayerTeamIndex].Text = packet.Time.ToString();
                     break;
                 }
                 case PacketType.RunUpdateToReceiver:
                 {
+                    CurrentStories[(byte)packet.PlayerIndex]++;
                     break;
                 }
             }

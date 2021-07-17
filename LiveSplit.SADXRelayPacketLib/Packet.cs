@@ -56,12 +56,13 @@ namespace LiveSplit.SADXRelayPacketLib
             Time = time;
         }
 
-        /// <summary>
-        /// Create a Packet of type Disconnect
-        /// </summary>
-        public Packet()
+        
+        public Packet(bool isRunUpdate = false)
         {
-            Type = PacketType.Disconnect;
+            if (isRunUpdate)
+                Type = PacketType.RunUpdate;
+            else
+                Type = PacketType.Disconnect;
         }
 
         /// <summary>
@@ -84,6 +85,18 @@ namespace LiveSplit.SADXRelayPacketLib
             PlayerIndex = playerIndex;
             PlayerTeamIndex = playerTeamIndex;
             Time = time;
+        }
+
+        /// <summary>
+        /// Create a Packet of type RunUpdateToReceiver
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        /// <param name="playerTeamIndex"></param>
+        public Packet(RelayStory playerIndex, RelayTeam playerTeamIndex)
+        {
+            Type = PacketType.RunUpdateToReceiver;
+            PlayerIndex = playerIndex;
+            PlayerTeamIndex = playerTeamIndex;
         }
         
         /// <summary>
@@ -116,7 +129,10 @@ namespace LiveSplit.SADXRelayPacketLib
                     buffer[1] = (byte)Response;
                     return buffer;
                 }
-                //case PacketType.RunUpdate:
+                case PacketType.RunUpdate:
+                {
+                    return new byte[] { (byte)Type };
+                }
                 case PacketType.CurrentTimeToReceiver:
                 {
                     buffer = new byte[11];
@@ -124,6 +140,14 @@ namespace LiveSplit.SADXRelayPacketLib
                     buffer[1] = (byte)PlayerIndex;
                     buffer[2] = (byte)PlayerTeamIndex;
                     BitConverter.GetBytes(Time.TotalMilliseconds).CopyTo(buffer, 3);
+                    return buffer;
+                }
+                case PacketType.RunUpdateToReceiver:
+                {
+                    buffer = new byte[3];
+                    buffer[0] = (byte)Type;
+                    buffer[1] = (byte)PlayerIndex;
+                    buffer[2] = (byte)PlayerTeamIndex;
                     return buffer;
                 }
                 default:
@@ -157,7 +181,10 @@ namespace LiveSplit.SADXRelayPacketLib
                     ResponseCode responseCode = (ResponseCode)bytes[1];
                     return new Packet(responseCode);
                 }
-                //case PacketType.RunUpdate:
+                case PacketType.RunUpdate:
+                {
+                    return new Packet(true);
+                }
                 case PacketType.CurrentTimeToReceiver:
                 {
                     RelayStory playerIndex = (RelayStory)bytes[1];
@@ -165,7 +192,12 @@ namespace LiveSplit.SADXRelayPacketLib
                     TimeSpan time = TimeSpan.FromMilliseconds(BitConverter.ToDouble(bytes, 3));
                     return new Packet(playerIndex, playerTeamIndex, time);
                 }
-                //case PacketType.RunUpdateToReceiver
+                case PacketType.RunUpdateToReceiver:
+                {
+                    RelayStory playerIndex = (RelayStory)bytes[1];
+                    RelayTeam playerTeamIndex = (RelayTeam)bytes[2];
+                    return new Packet(playerIndex, playerTeamIndex);
+                }
                 default:
                     return new Packet();
             }
@@ -181,10 +213,12 @@ namespace LiveSplit.SADXRelayPacketLib
                     return $"Type: {Type.ToString()}, Time: {Time}";
                 case PacketType.Response:
                     return $"Type: {Type.ToString()}, Response: {Response.ToString()}";
-                //case PacketType.RunUpdate:
+                case PacketType.RunUpdate:
+                    return $"Type: {Type.ToString()}";
                 case PacketType.CurrentTimeToReceiver:
                     return $"Type: {Type.ToString()}, PIndex: {PlayerIndex}, PTeamIndex: {PlayerTeamIndex}, Time: {Time}";
-                //case PacketType.RunUpdateToReceiver:
+                case PacketType.RunUpdateToReceiver:
+                    return $"Type: {Type.ToString()}, PIndex: {PlayerIndex}, PTeamIndex: {PlayerTeamIndex}";
                 default:
                     return $"Type: {Type.ToString()}";
             }

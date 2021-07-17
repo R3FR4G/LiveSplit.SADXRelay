@@ -82,21 +82,27 @@ namespace LiveSplit.SADXRelayClient
             {
                 int timeout = 2000;
 
-                if (LSState.CurrentPhase != TimerPhase.Running)
-                    return;
+                Packet packetToSend;
+                
                 if (LSState.CurrentPhase == TimerPhase.Ended)
+                {
+                    packetToSend = new Packet(true);   
                     IsAuthenticated = false;
-                Packet timePacket = new Packet(LSState.CurrentTime.GameTime.Value);
+                }
+                else if (LSState.CurrentPhase != TimerPhase.Running)
+                    return;
+                else
+                    packetToSend = new Packet(LSState.CurrentTime.GameTime.Value);
                 
                 Task<int> sendTask;
                 try
                 {
-                    sendTask = ServerClient.SendAsync(timePacket);
+                    sendTask = ServerClient.SendAsync(packetToSend);
                     sendTask.Wait(timeout);
                 }
                 catch
                 {
-                    MessageBox.Show("error");
+                    
                 }
             }
         }
