@@ -1,8 +1,9 @@
 using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace LiveSplit.SADXRelayReceiver
 {
-    partial class ReceiverForm
+    partial class EditOutlineForm
     {
         /// <summary>
         /// Required designer variable.
@@ -33,8 +34,11 @@ namespace LiveSplit.SADXRelayReceiver
         {
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1024, 300);
-            this.Text = "SADX Relay Race IGT Receiver";
+            this.ClientSize = new System.Drawing.Size(200, 120);
+            this.MinimizeBox = false;
+            this.MaximizeBox = false;
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            this.Text = "Outline Editor";
             this.DoubleBuffered = true;
         }
 

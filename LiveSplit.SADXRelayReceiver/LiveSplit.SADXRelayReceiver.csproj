@@ -59,6 +59,12 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="BackWorker.cs" />
+        <Compile Include="EditOutlineForm.cs">
+          <SubType>Form</SubType>
+        </Compile>
+        <Compile Include="EditOutlineForm.Designer.cs">
+          <DependentUpon>EditOutlineForm.cs</DependentUpon>
+        </Compile>
         <Compile Include="LineSeparatedSplitContainer.cs" />
         <Compile Include="OutlineLabel.cs" />
         <Compile Include="Receiver.cs" />
