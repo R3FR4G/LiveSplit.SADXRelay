@@ -47,15 +47,22 @@ namespace LiveSplit.SADXRelayReceiver
 
             while (true)
             {
-                var receivedResultsTask = udpClient.ReceiveAsync();
-                receivedResultsTask.Wait();
-                UdpReceiveResult receivedResults = receivedResultsTask.Result;
-                
-                _receivedBytes = receivedResults.Buffer;
-                Packet sent = Packet.FromBytes(ref _receivedBytes);
+                try
+                {
+                    var receivedResultsTask = udpClient.ReceiveAsync();
+                    receivedResultsTask.Wait();
+                    UdpReceiveResult receivedResults = receivedResultsTask.Result;
 
-                Console.WriteLine("received packet");
-                backWorker.ReportProgress(0, sent);
+                    _receivedBytes = receivedResults.Buffer;
+                    Packet sent = Packet.FromBytes(ref _receivedBytes);
+
+                    Console.WriteLine("received packet");
+                    backWorker.ReportProgress(0, sent);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                } 
             }
         }
     }
