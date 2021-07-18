@@ -124,9 +124,9 @@ namespace LiveSplit.SADXRelayReceiver
                         break;
 
                     CurrentTimes[teamIndex] = packet.Time;
-                    string displayedTimeFormat = packet.Time.Hours != 0 ? timeFormatWithHours : packet.Time.Minutes != 0 ? timeFormatWithMinutes : timeFormat;
 
                     TimeSpan timeToDisplay = packet.Time + FinalTimes[teamIndex];
+                    string displayedTimeFormat = timeToDisplay.Hours != 0 ? timeFormatWithHours : timeToDisplay.Minutes != 0 ? timeFormatWithMinutes : timeFormat;
                     
                     TimeLabels[teamIndex].Text = timeToDisplay.ToString(displayedTimeFormat);
                     break;
