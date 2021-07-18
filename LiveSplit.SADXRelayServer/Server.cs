@@ -47,7 +47,10 @@ namespace LiveSplit.SADXRelayServer
                         if (player != null)
                         {
                             if (player.Name == "Host")
+                            {
+                                Console.WriteLine("Race host connected");
                                 receiver = receivedResults.RemoteEndPoint;
+                            }
                             
                             player.IsAuthenticated = true;
                             player.PlayerConnection = receivedResults.RemoteEndPoint;
@@ -66,7 +69,8 @@ namespace LiveSplit.SADXRelayServer
                         if (sender == null || receiver == null)
                             continue;
 
-                        await udpClient.SendAsync(new Packet(sender.Story, sender.Team, sent.Time), receiver);
+                        int toReceiverTaskResult = await udpClient.SendAsync(new Packet(sender.Story, sender.Team, sent.Time), receiver);
+                        Console.WriteLine($"To Receiver Result: {toReceiverTaskResult}");
                     }
 
                     if (sent.Type == PacketType.RunUpdate)
@@ -76,7 +80,8 @@ namespace LiveSplit.SADXRelayServer
                         if (sender == null || receiver == null)
                             continue;
 
-                        await udpClient.SendAsync(new Packet(sender.Story, sender.Team), receiver);
+                        int toReceiverTaskResult = await udpClient.SendAsync(new Packet(sender.Story, sender.Team), receiver);
+                        Console.WriteLine($"Sent To Receiver Result: {toReceiverTaskResult}");
                     }
                 }
             }

@@ -112,7 +112,7 @@ namespace LiveSplit.SADXRelayReceiver
         {
             Packet packet = (Packet)e.UserState;
 
-            Console.WriteLine($"{packet.Type.ToString()}\n{packet.PlayerTeamIndex.ToString()}\n{packet.PlayerIndex.ToString()}\n{packet.Time}");
+            Console.WriteLine(packet.ToString());
             
             switch (packet.Type)
             {
@@ -135,7 +135,7 @@ namespace LiveSplit.SADXRelayReceiver
                 {
                     byte teamIndex = (byte)packet.PlayerTeamIndex;
 
-                    FinalTimes[teamIndex] = CurrentTimes[teamIndex];
+                    FinalTimes[teamIndex] += CurrentTimes[teamIndex];
                     
                     if (CurrentStories[teamIndex] == RelayStory.SuperSonic)
                     {

@@ -50,7 +50,13 @@ namespace LiveSplit.SADXRelayReceiver
                 try
                 {
                     var receivedResultsTask = udpClient.ReceiveAsync();
-                    receivedResultsTask.Wait();
+                    if (!receivedResultsTask.Wait(timeout))
+                    {
+                        udpClient.Close();
+                        udpClient = new UdpClient("roborecords.org", 3456);
+                        Console.WriteLine("didn't receive");
+                        continue;
+                    }
                     UdpReceiveResult receivedResults = receivedResultsTask.Result;
 
                     _receivedBytes = receivedResults.Buffer;
