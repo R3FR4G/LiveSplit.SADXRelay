@@ -237,7 +237,6 @@ namespace LiveSplit.SADXRelayReceiver
         private void QuitHandler(object sender, EventArgs e)
         {
             BackWorker.backWorker.CancelAsync();
-            BackWorker.udpClient.Dispose();
             Exit();
         }
 
