@@ -14,62 +14,64 @@ namespace LiveSplit.SADXRelayReceiver
         private static byte[] _receivedBytes;
         
         public static BackgroundWorker backWorker = new BackgroundWorker();
+
+        public static TcpClient tcpClient = new TcpClient();
         
         public static void DoWork()
         {
-            using (UdpClient udpClient = new UdpClient("roborecords.org", 3456))
+            tcpClient.Connect("localhost", 3456);
+            
+            if(!tcpClient.Connected)
+                MessageBox.Show("Couldn't connect to the server");
+
+            NetworkStream stream = tcpClient.GetStream();
+
+            while (true)
             {
-                int timeout = 2000;
+                if (!stream.DataAvailable)
+                    continue;
 
-                Packet idPacket = new Packet("R3L4");
-                Task<int> sendTask;
+                int typeByte = stream.ReadByte();
 
+                Console.WriteLine("read: " + typeByte);
+                
+                if (typeByte == -1)
+                {
+                    Console.WriteLine("failed");
+                    continue;
+                }
+
+                PacketType type = (PacketType)typeByte;
+
+                byte[] buffer;
+                
+                switch (type)
+                {
+                    case PacketType.CurrentTimeToReceiver:
+                        buffer = new byte[11];
+                        break;
+                    case PacketType.RunUpdateToReceiver:
+                        buffer = new byte[3];
+                        break;
+                    default:
+                        buffer = new byte[0];
+                        break;
+                }
+
+                buffer[0] = (byte)type;
                 try
                 {
-                    sendTask = udpClient.SendAsync(idPacket);
-                    sendTask.Wait(timeout);
-                }
-                catch
-                {
-                    MessageBox.Show("Couldn't connect to the server");
-                    ReceiverForm.Exit();
-                }
+                    stream.Read(buffer, 1, buffer.Length - 1);
+                    Packet sent = Packet.FromBytes(ref buffer);
+                    
+                    Console.WriteLine("received packet");
+                    backWorker.ReportProgress(0, sent);
 
-                Task<UdpReceiveResult> confirmationTask;
-                try
-                {
-                    confirmationTask = udpClient.ReceiveAsync();
-                    confirmationTask.Wait(timeout);
                 }
-                catch
+                catch (Exception e)
                 {
-                    MessageBox.Show("Couldn't get a response from the server");
-                    ReceiverForm.Exit();
-                }
-
-                while (true)
-                {
-                    try
-                    {
-                        var receivedResultsTask = udpClient.ReceiveAsync();
-                        receivedResultsTask.Wait();
-                        /*if (!receivedResultsTask.Wait(timeout))
-                        {
-                            Console.WriteLine("didn't receive");
-                            continue;
-                        }*/
-                        UdpReceiveResult receivedResults = receivedResultsTask.Result;
-
-                        _receivedBytes = receivedResults.Buffer;
-                        Packet sent = Packet.FromBytes(ref _receivedBytes);
-
-                        Console.WriteLine("received packet");
-                        backWorker.ReportProgress(0, sent);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e.Message);
-                    } 
+                    Console.WriteLine(e);
+                    throw;
                 }
             }
         }

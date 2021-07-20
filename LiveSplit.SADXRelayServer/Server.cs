@@ -8,6 +8,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using LiveSplit.SADXRelayPacketLib;
 
@@ -17,8 +18,10 @@ namespace LiveSplit.SADXRelayServer
     {
         public static List<Player> Players = JsonSerializer.Deserialize<List<Player>>(File.ReadAllText("players.json"));
 
-        public static IPEndPoint receiver;
-        
+        public static NetworkStream receiver;
+
+        public static TcpListener listener = new TcpListener(new IPEndPoint(IPAddress.Any, 3456));
+
         static void Main(string[] args)
         {
             foreach (Player player in Players)
@@ -28,8 +31,29 @@ namespace LiveSplit.SADXRelayServer
             DoWork().ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
+        static async Task InitiateReceiverConnection()
+        {
+            listener.Start();
+
+            while (true)
+            {
+                if (!listener.Pending())
+                {
+                    await Task.Delay(500);
+                    continue;
+                }
+
+                TcpClient receiverClient = await listener.AcceptTcpClientAsync();
+                receiver = receiverClient.GetStream();
+                Console.WriteLine("Host connected");
+                break;
+            }
+        }
+
         static async Task DoWork()
         {
+            Task.Factory.StartNew(InitiateReceiverConnection);
+            
             using (var udpClient = new UdpClient(3456))
             {
                 byte[] receivedBytes;
@@ -46,14 +70,16 @@ namespace LiveSplit.SADXRelayServer
                         Player player = Players.FirstOrDefault(p => p.Id == sent.Id);
                         if (player != null)
                         {
-                            if (player.Name == "Host")
+                            Player oldPlayer = CheckConnection(ref receivedResults);
+                            if (oldPlayer != null)
                             {
-                                Console.WriteLine("Race host connected");
-                                receiver = receivedResults.RemoteEndPoint;
+                                oldPlayer.IsAuthenticated = false;
+                                oldPlayer.PlayerConnection = null;
                             }
                             
                             player.IsAuthenticated = true;
                             player.PlayerConnection = receivedResults.RemoteEndPoint;
+
 
                             await udpClient.SendAsync(new Packet(ResponseCode.Ok), receivedResults.RemoteEndPoint);
                         }
@@ -69,8 +95,9 @@ namespace LiveSplit.SADXRelayServer
                         if (sender == null || receiver == null)
                             continue;
 
-                        int toReceiverTaskResult = await udpClient.SendAsync(new Packet(sender.Story, sender.Team, sent.Time), receiver);
-                        Console.WriteLine($"To Receiver Result: {toReceiverTaskResult}");
+                        //int toReceiverTaskResult = await udpClient.SendAsync(new Packet(sender.Story, sender.Team, sent.Time), receiver);
+                        await receiver.WriteAsync(new Packet(sender.Story, sender.Team, sent.Time).ToBytes(), CancellationToken.None);
+                        //Console.WriteLine($"To Receiver Result: {toReceiverTaskResult}");
                     }
 
                     if (sent.Type == PacketType.RunUpdate)
@@ -80,8 +107,9 @@ namespace LiveSplit.SADXRelayServer
                         if (sender == null || receiver == null)
                             continue;
 
-                        int toReceiverTaskResult = await udpClient.SendAsync(new Packet(sender.Story, sender.Team), receiver);
-                        Console.WriteLine($"Sent To Receiver Result: {toReceiverTaskResult}");
+                        //int toReceiverTaskResult = await udpClient.SendAsync(new Packet(sender.Story, sender.Team), receiver);
+                        await receiver.WriteAsync(new Packet(sender.Story, sender.Team).ToBytes(), CancellationToken.None);
+                        //Console.WriteLine($"Sent To Receiver Result: {toReceiverTaskResult}");
                     }
                 }
             }
